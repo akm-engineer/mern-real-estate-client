@@ -3,6 +3,8 @@ import mongoose from "mongoose";
 import dotenv from "dotenv";
 import router from "./routes/user.js";
 import authRouter from "./routes/auth.js";
+import cors from "cors";
+
 dotenv.config();
 
 mongoose
@@ -14,6 +16,8 @@ mongoose
 
 const app = express();
 app.use(express.json());
+
+app.use(cors());
 
 app.use("/api/user", router);
 app.use("/api/auth", authRouter);
