@@ -20,6 +20,11 @@ const userSchema = mongoose.Schema(
       require: "Please enter a password",
       minLength: 8,
     },
+    avatar: {
+      type: String,
+      default:
+        "https://img.freepik.com/premium-vector/accoun-vector-icon-with-long-shadow-white-illustration-isolated-blue-round-background-graphic-web-design_549897-771.jpg",
+    },
   },
   { timestamps: true }
 );
