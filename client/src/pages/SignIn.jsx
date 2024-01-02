@@ -1,29 +1,37 @@
 import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
+import {
+  signInFailure,
+  signInStart,
+  signInSuccess,
+} from "../redux/user/userSlice";
 
 const SignIn = () => {
   const [formData, setFormData] = useState({});
-  const [error, setError] = useState(null);
-  const [loading, setLoading] = useState(false);
+  // const [error, setError] = useState(null);
+  // const [loading, setLoading] = useState(false);
+  const { loading, error } = useSelector((state) => state.user);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const handChange = (e) => {
     setFormData({ ...formData, [e.target.id]: e.target.value });
   };
   const handSubmit = async (e) => {
     e.preventDefault();
 
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!formData.email || !emailRegex.test(formData.email)) {
-      setError("Please enter a valid email address.");
-      return;
-    }
+    // const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    // if (!formData.email || !emailRegex.test(formData.email)) {
+    //   setError("Please enter a valid email address.");
+    //   return;
+    // }
 
-    if (!formData.password) {
-      setError("Please enter a password.");
-      return;
-    }
+    // if (!formData.password) {
+    //   setError("Please enter a password.");
+    //   return;
+    // }
     try {
-      setLoading(true);
+      dispatch(signInStart());
       const res = await fetch("/api/auth/signin", {
         method: "POST",
         headers: {
@@ -34,16 +42,19 @@ const SignIn = () => {
       const data = await res.json();
       console.log(data);
       if (data.success === false) {
-        setLoading(false);
-        setError(data.message);
+        // setLoading(false);
+        // setError(data.message);
+        dispatch(signInFailure(data.message));
         return;
       }
-      setLoading(false);
-      setError(null);
+      // setLoading(false);
+      // setError(null);
+      dispatch(signInSuccess(data));
       navigate("/");
     } catch (error) {
-      setLoading(false);
-      setError(error.message);
+      // setLoading(false);
+      // setError(error.message);
+      dispatch(signInFailure(error.message));
     }
   };
 
