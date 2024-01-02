@@ -9,8 +9,7 @@ import {
 
 const SignIn = () => {
   const [formData, setFormData] = useState({});
-  // const [error, setError] = useState(null);
-  // const [loading, setLoading] = useState(false);
+
   const { loading, error } = useSelector((state) => state.user);
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -20,16 +19,6 @@ const SignIn = () => {
   const handSubmit = async (e) => {
     e.preventDefault();
 
-    // const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    // if (!formData.email || !emailRegex.test(formData.email)) {
-    //   setError("Please enter a valid email address.");
-    //   return;
-    // }
-
-    // if (!formData.password) {
-    //   setError("Please enter a password.");
-    //   return;
-    // }
     try {
       dispatch(signInStart());
       const res = await fetch("/api/auth/signin", {
@@ -42,18 +31,13 @@ const SignIn = () => {
       const data = await res.json();
       console.log(data);
       if (data.success === false) {
-        // setLoading(false);
-        // setError(data.message);
         dispatch(signInFailure(data.message));
         return;
       }
-      // setLoading(false);
-      // setError(null);
+
       dispatch(signInSuccess(data));
       navigate("/");
     } catch (error) {
-      // setLoading(false);
-      // setError(error.message);
       dispatch(signInFailure(error.message));
     }
   };
