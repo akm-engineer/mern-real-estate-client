@@ -7,7 +7,7 @@ const Header = () => {
   const { currentUser } = useSelector((state) => state.user);
   const [searchTerm, setSearchTerms] = useState("");
   const navigate = useNavigate();
-  const handleSubmi = (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
     const urlParams = new URLSearchParams(window.location.search);
     urlParams.set("searchTerm", searchTerm);
@@ -20,7 +20,7 @@ const Header = () => {
     if (searchTermsFromUrl) {
       setSearchTerms(searchTermsFromUrl);
     }
-  }, []);
+  }, [window.location.search]);
   return (
     <header className="bg-slate-200 shadow-md">
       <div className="flex justify-between items-start max-w-6xl mx-auto p-3">
@@ -31,7 +31,7 @@ const Header = () => {
           </h1>
         </Link>
         <form
-          onSubmit={handleSubmi}
+          onSubmit={handleSubmit}
           className="bg-slate-100 p-3 rounded-lg flex items-center"
         >
           <input
