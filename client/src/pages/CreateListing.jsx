@@ -296,7 +296,7 @@ const CreateListing = () => {
                 <input
                   type="number"
                   min={"0"}
-                  max={"1000"}
+                  max={"100000"}
                   id="discountedPrice"
                   onChange={handleChange}
                   value={formData.discountedPrice}

@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import ListingItem from "../components/ListingItem";
@@ -15,7 +16,7 @@ const Search = () => {
   });
   const [loading, setLoading] = useState(false);
   const [listing, setListing] = useState([]);
-  console.log(listing);
+  const [showMore, setShowMore] = useState(false);
 
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
@@ -48,9 +49,15 @@ const Search = () => {
     }
     const fetchListings = async () => {
       setLoading(true);
+      setShowMore(false);
       const searchQuery = urlParams.toString();
       const res = await fetch(`/api/listing/get?${searchQuery}`);
       const data = await res.json();
+      if (data.length > 8) {
+        setShowMore(true);
+      } else {
+        setShowMore(false);
+      }
       setListing(data);
       setLoading(false);
     };
@@ -100,6 +107,19 @@ const Search = () => {
     urlParams.set("offer", sideBarData.offer);
     const searchQuery = urlParams.toString();
     navigate(`/search?${searchQuery}`);
+  };
+  const onShowMoreClick = async () => {
+    const numberOfListings = listing.length;
+    const startIndex = numberOfListings;
+    const urlParams = new URLSearchParams(window.location.search);
+    urlParams.set("startIndex", startIndex);
+    const searchQuery = urlParams.toString();
+    const res = await fetch(`/api/listing/get?${searchQuery}`);
+    const data = await res.json();
+    if (data.length < 9) {
+      setShowMore(false);
+    }
+    setListing([...listing, ...data]);
   };
   return (
     <div className="flex flex-col md:flex-row">
@@ -223,6 +243,14 @@ const Search = () => {
             listing.map((list) => (
               <ListingItem key={list._id} listing={list} />
             ))}
+          {showMore && (
+            <button
+              className="text-green-700 hover:underline font-semibold text-sm text-center w-full "
+              onClick={onShowMoreClick}
+            >
+              Show More
+            </button>
+          )}
         </div>
       </div>
     </div>
