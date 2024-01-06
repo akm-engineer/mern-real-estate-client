@@ -1,11 +1,20 @@
 # Bharat Estate
 
 Welcome to Bharat Estate, a cutting-edge real estate platform that seamlessly combines innovative technologies to revolutionize property transactions. This project leverages the power of the MERN stack (MongoDB, Express.js, React, Node.js), JavaScript, Firebase, and Cloudinary to deliver a dynamic and feature-rich user experience.
+
 ![Screenshot 2024-01-06 140100](https://github.com/akm-engineer/mern-real-estate-client/assets/118009781/4822b86e-007e-4c15-9843-4c02e5cab214)
+
+![4](https://github.com/akm-engineer/mern-real-estate-client/assets/118009781/9d8faca0-ce20-4d2c-bd6d-8fa4ef5ca6af)
 
 ![2](https://github.com/akm-engineer/mern-real-estate-client/assets/118009781/af975011-834b-4942-b4e8-a8397454043e)
 
 ![3](https://github.com/akm-engineer/mern-real-estate-client/assets/118009781/db98ed99-9c67-4f79-8218-c52f757a7f6b)
+
+![5](https://github.com/akm-engineer/mern-real-estate-client/assets/118009781/06ea69ef-a246-4c9b-adf4-12a1943e09dd)
+
+![6](https://github.com/akm-engineer/mern-real-estate-client/assets/118009781/be232f78-a3c8-4aa3-b1ac-15531017a72a)
+
+![7](https://github.com/akm-engineer/mern-real-estate-client/assets/118009781/d3d5285a-24df-4b50-92af-c04c1d340ef8)
 
 ## Features
 
