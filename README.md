@@ -29,7 +29,7 @@ Welcome to Bharat Estate, a cutting-edge real estate platform that seamlessly co
 
 ## Getting Started
 
-1. Clone the repository: `git clone https://github.com/yourusername/bharat-estate.git`
+1. Clone the repository: `github.com/akm-engineer/mern-real-estate-client/tree/master`
 2. Navigate to the project directory: `cd bharat-estate`
 3. Install dependencies: `npm install`
 4. Set up Firebase credentials and Cloudinary API keys.
