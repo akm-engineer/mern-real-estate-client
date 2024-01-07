@@ -10,7 +10,10 @@ import {
 } from "firebase/storage";
 
 const CreateListing = () => {
+  // Redux state for current user
   const { currentUser } = useSelector((state) => state.user);
+
+  // State variables for form data, file uploads, and loading indicators
   const [files, setFiles] = useState([]);
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
@@ -27,17 +30,20 @@ const CreateListing = () => {
     parking: false,
     furnished: false,
   });
+
   const [imageUploadErrors, setImageUploadErrors] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState(false);
   const [loading, setLoading] = useState(false);
-  console.log(formData);
 
+  // Function to handle image submission
   const handleImageSubmit = () => {
     if (files.length === 0) {
       setImageUploadErrors("Please select at least one image to upload.");
       return;
     }
+
+    // Validation for the number of images allowed
     if (files.length > 0 && files.length + formData.imageUrls.length < 7) {
       setUploading(true);
       setImageUploadErrors(false);
@@ -47,6 +53,7 @@ const CreateListing = () => {
       }
       Promise.all(promises)
         .then((urls) => {
+          // Update form data with image URLs
           setFormData({
             ...formData,
             imageUrls: formData.imageUrls.concat(urls),
@@ -65,12 +72,16 @@ const CreateListing = () => {
       setUploading(false);
     }
   };
+
+  // Function to upload an image to Firebase Storage
   const storageImage = async (file) => {
     return new Promise((resolve, reject) => {
       const storage = getStorage(app);
       const fileName = new Date().getTime() + file.name;
       const storageRef = ref(storage, fileName);
       const uploadTask = uploadBytesResumable(storageRef, file);
+
+      // Event listeners for upload progress and completion
       uploadTask.on(
         "state_changed",
         (snapshot) => {
@@ -82,6 +93,7 @@ const CreateListing = () => {
           reject(error);
         },
         () => {
+          // Once uploaded, get the download URL and resolve the promise
           getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
             resolve(downloadURL);
           });
@@ -89,6 +101,8 @@ const CreateListing = () => {
       );
     });
   };
+
+  // Function to remove an image from the form data and files
   const handleRemoveImage = (index) => {
     setFormData({
       ...formData,
@@ -100,6 +114,8 @@ const CreateListing = () => {
       return updatedFiles;
     });
   };
+
+  // Function to handle form field changes
   const handleChange = (e) => {
     if (e.target.id === "sale" || e.target.id === "rent") {
       setFormData({
@@ -128,6 +144,8 @@ const CreateListing = () => {
       });
     }
   };
+
+  // Function to handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -137,6 +155,8 @@ const CreateListing = () => {
         return setError("Discounted Price must be lower than Regular price");
       setLoading(true);
       setError(false);
+
+      // API call to create a listing
       const res = await fetch("/api/listing/create", {
         method: "POST",
         headers: {
@@ -147,8 +167,11 @@ const CreateListing = () => {
           userRef: currentUser._id,
         }),
       });
+
       const data = await res.json();
       setLoading(false);
+
+      // Handle API response
       if (data.success === false) {
         setError(data.message);
       }
@@ -160,11 +183,15 @@ const CreateListing = () => {
   };
   return (
     <main className="p-3 max-w-4xl mx-auto">
+      {/* Form for creating a listing */}
       <h1 className="text-3xl font-semibold text-center my-7">
         Create a Listing
       </h1>
       <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-4">
+        {/* Form sections for property details and images */}
         <div className="flex flex-col gap-4 flex-1">
+          {/* Input fields for property details */}
+          {/* ... (additional input fields) ... */}
           <input
             type="text"
             placeholder="Name"

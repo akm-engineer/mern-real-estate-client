@@ -4,7 +4,10 @@ import { useNavigate } from "react-router-dom";
 import ListingItem from "../components/ListingItem";
 
 const Search = () => {
+  // Hook to navigate between pages
   const navigate = useNavigate();
+
+  // State to manage search parameters and results
   const [sideBarData, setSideBarData] = useState({
     searchTerm: "",
     type: "all",
@@ -18,6 +21,7 @@ const Search = () => {
   const [listing, setListing] = useState([]);
   const [showMore, setShowMore] = useState(false);
 
+  // Effect to fetch listings based on URL parameters
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
     const searchTermUrl = urlParams.get("searchTerm");
@@ -64,6 +68,7 @@ const Search = () => {
     fetchListings();
   }, [window.location.search]);
 
+  // Event handler for form input changes
   const handleChange = (e) => {
     if (
       e.target.id === "all" ||
@@ -95,6 +100,8 @@ const Search = () => {
       setSideBarData({ ...sideBarData, sort, order });
     }
   };
+
+  // Event handler for form submission
   const handleSubmit = (e) => {
     e.preventDefault();
     const urlParams = new URLSearchParams();
@@ -108,6 +115,8 @@ const Search = () => {
     const searchQuery = urlParams.toString();
     navigate(`/search?${searchQuery}`);
   };
+
+  // Event handler for "Show More" button click
   const onShowMoreClick = async () => {
     const numberOfListings = listing.length;
     const startIndex = numberOfListings;
@@ -123,8 +132,10 @@ const Search = () => {
   };
   return (
     <div className="flex flex-col md:flex-row">
+      {/* Sidebar for search filters */}
       <div className="p-7 border-b-2 md:border-r-2 md:min-h-screen">
         <form onSubmit={handleSubmit} className="flex flex-col gap-8">
+          {/* Search term input */}
           <div className="flex items-center gap-2">
             <label className="whitespace-nowrap font-semibold">
               Search Terms:
@@ -138,6 +149,8 @@ const Search = () => {
               className="p-3 w-full border border-slate-400 rounded-lg focus:outline-none"
             />
           </div>
+
+          {/* Type checkboxes (Rent, Sale, All) */}
           <div className="flex gap-2 items-center flex-wrap">
             <label className="font-semibold">Type:</label>
             <div className="flex gap-2">
@@ -181,6 +194,8 @@ const Search = () => {
               <span>Offer</span>
             </div>
           </div>
+
+          {/* Amenities checkboxes (Parking, Furnished) */}
           <div className="flex gap-2 items-center flex-wrap">
             <label className="font-semibold">Amenties:</label>
             <div className="flex gap-2">
@@ -204,6 +219,8 @@ const Search = () => {
               <span>Furnished </span>
             </div>
           </div>
+
+          {/* Sorting options */}
           <div className="flex items-center gap-2">
             <label className="font-semibold">Sort:</label>
             <select
@@ -223,26 +240,33 @@ const Search = () => {
           </button>
         </form>
       </div>
+
+      {/* Displaying search results */}
       <div className="flex-1">
         <h1 className="text-slate-700 font-semibold text-3xl border-b p-3 mt-5">
           Listing Results:{" "}
         </h1>
         <div className="p-7 flex flex-wrap gap-4">
+          {/* No listings found message */}
           {!loading && listing.length === 0 && (
             <p className="text-3xl text-red-700">
               No Listing Found....🥺🥺🥺🥺
             </p>
           )}
+          {/* Loading message */}
           {loading && (
             <p className="text-2xl text-slate-700 text-center w-full">
               Loading 🧐🧐🧐🧐🧐
             </p>
           )}
+          {/* Displaying listings */}
           {!loading &&
             listing &&
             listing.map((list) => (
               <ListingItem key={list._id} listing={list} />
             ))}
+
+          {/* Show More button */}
           {showMore && (
             <button
               className="text-green-700 hover:underline font-semibold text-sm text-center w-full "

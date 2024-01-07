@@ -22,9 +22,14 @@ import {
 import { Link } from "react-router-dom";
 
 const Profile = () => {
+  // Ref for the file input
   const fileRef = useRef(null);
 
+  // Redux state and dispatch
   const { currentUser, loading, error } = useSelector((state) => state.user);
+  const dispatch = useDispatch();
+
+  // State variables for managing file upload and form data
   const [file, setFile] = useState(undefined);
   const [filePerc, setFilePerf] = useState(0);
   const [fileUploadError, setFileUploadError] = useState(false);
@@ -32,13 +37,23 @@ const Profile = () => {
   const [updateSuccess, setUpdateSuccess] = useState(false);
   const [showListingsError, setShowListingsError] = useState(false);
   const [userListings, setUserListings] = useState([]);
-  const dispatch = useDispatch();
 
+  // Effect for handling file changes
   useEffect(() => {
     if (file) {
       handleFileUpload(file);
     }
   }, [file]);
+  const handleError = (errorStateSetter, duration = 3000) => {
+    errorStateSetter(true);
+
+    // Clear error after specified duration
+    setTimeout(() => {
+      errorStateSetter(false);
+    }, duration);
+  };
+
+  // Function to handle file upload using Firebase Storage
   const handleFileUpload = (file) => {
     const storage = getStorage(app);
     const fileName = new Date().getTime() + file.name;
@@ -54,6 +69,7 @@ const Profile = () => {
       },
       (error) => {
         setFileUploadError(true);
+        handleError(setFileUploadError);
       },
       () => {
         getDownloadURL(uploadTask.snapshot.ref).then(
@@ -66,6 +82,8 @@ const Profile = () => {
       }
     );
   };
+
+  // Function to handle form input changes
   const handleChange = (e) => {
     setFormData({
       ...formData,
@@ -73,6 +91,7 @@ const Profile = () => {
     });
   };
 
+  // Function to handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -87,10 +106,12 @@ const Profile = () => {
       const data = await res.json();
       if (data.success === false) {
         dispatch(updateUserFailure(data.message));
+        handleError(() => dispatch(updateUserFailure(null)));
         return;
       }
       dispatch(updateUserSuccess(data));
       setUpdateSuccess(true);
+
       setTimeout(() => {
         setUpdateSuccess(false);
       }, 3000);
@@ -102,6 +123,7 @@ const Profile = () => {
     }
   };
 
+  // Function to handle user account deletion
   const handleDeleteUser = async () => {
     try {
       dispatch(deleteUserStart());
@@ -119,6 +141,8 @@ const Profile = () => {
       dispatch(deleteUserFailure(error.message));
     }
   };
+
+  // Function to handle user sign out
   const handleSignOut = async () => {
     try {
       dispatch(signOutUserStart());
@@ -133,6 +157,8 @@ const Profile = () => {
       dispatch(signOutUserFailure(error.message));
     }
   };
+
+  // Function to fetch and display user listings
   const handleShowListings = async () => {
     try {
       setShowListingsError(false);
@@ -140,13 +166,17 @@ const Profile = () => {
       const data = await res.json();
       if (data.success === false) {
         setShowListingsError(true);
+        handleError(() => setShowListingsError(false));
         return;
       }
       setUserListings(data);
     } catch (error) {
       setShowListingsError(true);
+      handleError(() => setShowListingsError(false));
     }
   };
+
+  // Function to handle deletion of a specific listing
   const handleListingDelete = async (listingId) => {
     try {
       const res = await fetch(`/api/listing/delete/${listingId}`, {

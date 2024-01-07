@@ -16,26 +16,38 @@ import {
 import Contact from "../components/Contact";
 
 const Listing = () => {
+  // Redux state to get the current user
   const { currentUser } = useSelector((state) => state.user);
+
+  // Initialize Swiper Navigation
   SwiperCore.use([Navigation]);
+
+  // State variables
   const [listing, setListing] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
   const [copied, setCopied] = useState(false);
   const [contact, setContact] = useState(false);
+
+  // Get listing ID from URL params
   const params = useParams();
+
   useEffect(() => {
+    // Fetch listing details based on the listing ID
     const fetchListing = async () => {
       try {
         setLoading(true);
         const res = await fetch(`/api/listing/get/${params.listingId}`);
         const data = await res.json();
 
+        // Handle error response
         if (data.success === false) {
           setError(true);
           setLoading(false);
           return;
         }
+
+        // Set listing data
         setListing(data);
         setLoading(false);
         setError(false);
@@ -44,6 +56,8 @@ const Listing = () => {
         setLoading(false);
       }
     };
+
+    // Trigger fetchListing() when the component mounts or when params.listingId changes
     fetchListing();
   }, [params.listingId]);
   console.log(loading);

@@ -7,12 +7,16 @@ import "swiper/css/bundle";
 import ListingItem from "../components/ListingItem";
 
 const Home = () => {
+  // Initialize Swiper Navigation
   SwiperCore.use([Navigation]);
+
+  // State variables to store listings data
   const [offerListings, setOfferListings] = useState([]);
   const [saleListings, setSaleListings] = useState([]);
   const [rentListing, setRentListing] = useState([]);
-  console.log(saleListings);
+
   useEffect(() => {
+    // Fetch Offer Listings
     const fetchOfferListing = async () => {
       try {
         const res = await fetch(`/api/listing/get?offer=true&limit=4`);
@@ -23,6 +27,8 @@ const Home = () => {
         console.log(error);
       }
     };
+
+    // Fetch Rent Listings
     const fetchRentListing = async () => {
       try {
         const res = await fetch(`/api/listing/get?type=rent&limit=4`);
@@ -33,6 +39,8 @@ const Home = () => {
         console.log(error);
       }
     };
+
+    // Fetch Sale Listings
     const fetchSaleListing = async () => {
       try {
         const res = await fetch(`/api/listing/get?type=sale&limit=4`);
@@ -42,10 +50,13 @@ const Home = () => {
         console.log(error);
       }
     };
+
+    // Initial fetch for Offer Listings
     fetchOfferListing();
   }, []);
   return (
     <div>
+      {/* Introduction Section */}
       <div className="flex flex-col gap-6 p-28 px-3 max-w-6xl mx-auto">
         <h1 className="text-slate-700 text-3xl lg:text-6xl font-bold">
           Find your next <span className="text-slate-500">perfect</span>
@@ -66,6 +77,7 @@ const Home = () => {
           Let's get started...
         </Link>
       </div>
+      {/* Swiper Slider for Offer Listings */}
       <Swiper navigation>
         {offerListings &&
           offerListings.length > 0 &&

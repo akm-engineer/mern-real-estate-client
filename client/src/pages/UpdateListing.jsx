@@ -11,7 +11,10 @@ import {
 } from "firebase/storage";
 
 const CreateListing = () => {
+  // Fetching user information from Redux state
   const { currentUser } = useSelector((state) => state.user);
+
+  // State variables to manage form data, image uploads, and loading state
   const [files, setFiles] = useState([]);
   const navigate = useNavigate();
   const params = useParams();
@@ -34,6 +37,7 @@ const CreateListing = () => {
   const [error, setError] = useState(false);
   const [loading, setLoading] = useState(false);
 
+  // Fetch listing information for editing
   useEffect(() => {
     const fetchListing = async () => {
       const listingId = params.listingId;
@@ -47,6 +51,7 @@ const CreateListing = () => {
     fetchListing();
   }, []);
 
+  // Handle image upload
   const handleImageSubmit = () => {
     if (files.length === 0) {
       setImageUploadErrors("Please select at least one image to upload.");
@@ -79,6 +84,8 @@ const CreateListing = () => {
       setUploading(false);
     }
   };
+
+  // Function to upload image to Firebase Storage
   const storageImage = async (file) => {
     return new Promise((resolve, reject) => {
       const storage = getStorage(app);
@@ -103,6 +110,8 @@ const CreateListing = () => {
       );
     });
   };
+
+  // Handle removing an image from the listing
   const handleRemoveImage = (index) => {
     setFormData({
       ...formData,
@@ -114,6 +123,8 @@ const CreateListing = () => {
       return updatedFiles;
     });
   };
+
+  // Handle form input changes
   const handleChange = (e) => {
     if (e.target.id === "sale" || e.target.id === "rent") {
       setFormData({
@@ -142,15 +153,21 @@ const CreateListing = () => {
       });
     }
   };
+
+  // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+      // Validation checks
       if (formData.imageUrls.length < 1)
         return setError("You must upload a image");
       if (+formData.regularPrice < +formData.discountedPrice)
         return setError("Discounted Price must be lower than Regular price");
+
       setLoading(true);
       setError(false);
+
+      // Send request to update listing
       const res = await fetch(`/api/listing/update/${params.listingId}`, {
         method: "POST",
         headers: {
@@ -161,17 +178,22 @@ const CreateListing = () => {
           userRef: currentUser._id,
         }),
       });
+
       const data = await res.json();
+
       setLoading(false);
+
       if (data.success === false) {
         setError(data.message);
       }
+
       navigate(`/listing/${data._id}`);
     } catch (error) {
       setError(error.message);
       setLoading(false);
     }
   };
+
   return (
     <main className="p-3 max-w-4xl mx-auto">
       <h1 className="text-3xl font-semibold text-center my-7">
