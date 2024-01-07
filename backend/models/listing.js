@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 
+// Define the listing schema
 const listingSchema = new mongoose.Schema(
   {
     name: {
@@ -61,5 +62,7 @@ const listingSchema = new mongoose.Schema(
   }
 );
 
+// Create the Listing model
 const Listing = mongoose.model("Listing", listingSchema);
+
 export default Listing;

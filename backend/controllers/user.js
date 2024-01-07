@@ -3,10 +3,12 @@ import User from "../models/user.js";
 import { errorHandler } from "../utils/error.js";
 import bcryptjs from "bcryptjs";
 
+//Test endpoint for checking server response
 export const test = (req, res) => {
   res.send("Hello there");
 };
 
+//Update user information
 export const updateUser = async (req, res, next) => {
   if (req.user.id !== req.params.id)
     return next(errorHandler(401, "you can only update your own account"));
@@ -36,6 +38,7 @@ export const updateUser = async (req, res, next) => {
   }
 };
 
+// Delete user account
 export const deleteUser = async (req, res, next) => {
   if (req.user.id !== req.params.id)
     return next(errorHandler(401, "you can only delete your own account"));
@@ -47,6 +50,8 @@ export const deleteUser = async (req, res, next) => {
     next(error);
   }
 };
+
+//Get listings associated with a user
 export const getUserListings = async (req, res, next) => {
   if (req.user.id === req.params.id) {
     try {
@@ -59,6 +64,8 @@ export const getUserListings = async (req, res, next) => {
     return next(errorHandler(401, "You can only view your own Listings"));
   }
 };
+
+// Get user information
 export const getUser = async (req, res, next) => {
   try {
     const user = await User.findById(req.params.id);

@@ -1,6 +1,7 @@
 import Listing from "../models/listing.js";
 import { errorHandler } from "../utils/error.js";
 
+// Create a new listing
 export const createListing = async (req, res, next) => {
   try {
     const listing = await Listing.create(req.body);
@@ -9,6 +10,8 @@ export const createListing = async (req, res, next) => {
     next(error);
   }
 };
+
+// Delete a listing
 export const deleteListing = async (req, res, next) => {
   const listing = await Listing.findById(req.params.id);
   if (!listing) return next(errorHandler(401, "Listing not found..."));
@@ -23,6 +26,8 @@ export const deleteListing = async (req, res, next) => {
     next(error);
   }
 };
+
+// Update a listing
 export const updateListing = async (req, res, next) => {
   const listing = await Listing.findById(req.params.id);
   if (!listing) return next(errorHandler(401, "Listing not found..."));
@@ -41,6 +46,8 @@ export const updateListing = async (req, res, next) => {
     next(error);
   }
 };
+
+// Get a specific listing
 export const getListing = async (req, res, next) => {
   try {
     const listing = await Listing.findById(req.params.id);
@@ -53,6 +60,7 @@ export const getListing = async (req, res, next) => {
   }
 };
 
+// Search for listings based on various parameters
 export const searchListing = async (req, res, next) => {
   try {
     const limit = parseInt(req.query.limit) || 9;

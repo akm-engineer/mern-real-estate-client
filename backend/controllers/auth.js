@@ -3,6 +3,7 @@ import bcryptjs from "bcryptjs";
 import { errorHandler } from "../utils/error.js";
 import jwt from "jsonwebtoken";
 
+// Register a new user
 export const signup = async (req, res, next) => {
   const { username, email, password } = req.body;
 
@@ -34,6 +35,7 @@ export const signup = async (req, res, next) => {
   }
 };
 
+// User login
 export const signin = async (req, res, next) => {
   const { email, password } = req.body;
   // Find the user by their email address
@@ -44,6 +46,7 @@ export const signin = async (req, res, next) => {
     const validPassword = bcryptjs.compareSync(password, validUser.password);
     if (!validPassword) return next(errorHandler(404, "Wrong credentials"));
 
+    // Generate JWT token upon successful login
     const token = jwt.sign({ id: validUser._id }, process.env.JWT_SECRET);
     const { password: pass, ...rest } = validUser._doc;
     res
@@ -55,10 +58,12 @@ export const signin = async (req, res, next) => {
   }
 };
 
+// Google Sign-in or Sign-up
 export const google = async (req, res, next) => {
   try {
     const user = await User.findOne({ email: req.body.email });
 
+    // If the user already exists, generate a JWT token
     if (user) {
       const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET);
       const { password: pass, ...rest } = user._doc;
@@ -67,6 +72,7 @@ export const google = async (req, res, next) => {
         .status(200)
         .json(rest);
     } else {
+      // If the user doesn't exist, create a new user and generate a JWT token
       const generatedPassword =
         Math.random().toString(36).slice(-8) +
         Math.random().toString(36).slice(-8);
@@ -92,6 +98,7 @@ export const google = async (req, res, next) => {
   }
 };
 
+// User sign-out
 export const signout = async (req, res, next) => {
   try {
     res.clearCookie("access_token");
